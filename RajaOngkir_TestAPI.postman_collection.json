@@ -1,0 +1,246 @@
+{
+	"info": {
+		"_postman_id": "de4ced34-2b48-4309-8128-18dcdc1ed162",
+		"name": "RajaOngkir_TestAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30448925"
+	},
+	"item": [
+		{
+			"name": "{{urlongkir}}/province",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"var responseBody = pm.response.json();",
+							"pm.test(\"The total provinces are 34\", function() {",
+							"    // Pastikan jumlah provinsi sesuai dengan yang diharapkan (34)",
+							"    pm.expect(responseBody.rajaongkir.results.length).to.equal(34);",
+							"});",
+							"pm.test(\"Province with province_id 1 is Bali\", function() {",
+							"    pm.expect(responseBody.rajaongkir.results[0].province_id).to.equal(\"1\");",
+							"    pm.expect(responseBody.rajaongkir.results[0].province).to.equal(\"Bali\");",
+							"});",
+							"pm.test(\"Province with province_id 34 is Sumatera Utara\", function() {",
+							"    // Find the province with ID 34 in the response",
+							"    var sumateraUtaraProvince = responseBody.rajaongkir.results.find(function(province) {",
+							"        return province.province_id === \"34\" && province.province === \"Sumatera Utara\";",
+							"    });",
+							"",
+							"    // Make sure the province Sumatera Utara is Found",
+							"    pm.expect(sumateraUtaraProvince).to.exist;",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "key",
+						"value": "307d3f7f7fc2939a82e8558de62e84a7",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{urlongkir}}/province",
+					"host": [
+						"{{urlongkir}}"
+					],
+					"path": [
+						"province"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{urlongkir}}/city",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Parse the response body as JSON",
+							"var jsonData = pm.response.json();",
+							"",
+							"// Extract city_id values from the results",
+							"var cityId = jsonData.rajaongkir.results.map(function(result) {",
+							"    return result.city_id;",
+							"});",
+							"",
+							"// Log the total number of city_id values",
+							"console.log('Total City ID: ' + cityId.length);",
+							"// Check if the total number of city_id values is equal to 501",
+							"pm.test(\"Total City ID should be 501\", function() {",
+							"    pm.expect(cityId.length).to.equal(501);",
+							"});",
+							"var responseBody = pm.response.json();",
+							"",
+							"// Check City ID 1",
+							"pm.test(\"City ID 1 is Aceh Barat\", function() {",
+							"    var cityId1 = responseBody.rajaongkir.results.find(city => city.city_id === \"1\");",
+							"    pm.expect(cityId1).to.not.be.undefined;",
+							"    pm.expect(cityId1.city_name).to.equal(\"Aceh Barat\");",
+							"});",
+							"pm.test(\"City ID 501 is Yogyakarta\", function() {",
+							"    var cityId501 = responseBody.rajaongkir.results.find(city => city.city_id === \"501\");",
+							"    pm.expect(cityId501).to.not.be.undefined;",
+							"    pm.expect(cityId501.city_name).to.equal(\"Yogyakarta\");",
+							"});",
+							"",
+							"  "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "key",
+						"value": "307d3f7f7fc2939a82e8558de62e84a7",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{urlongkir}}/city",
+					"host": [
+						"{{urlongkir}}"
+					],
+					"path": [
+						"city"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "{{urlongkir}}/cost",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check Origin City Name is Surakarta (Solo)\", function () {",
+							"    // Get the response JSON",
+							"    var jsonResponse = pm.response.json();",
+							"",
+							"    // Extract the city_name from origin_details",
+							"    var originCityName = jsonResponse.rajaongkir.origin_details.city_name;",
+							"",
+							"    // Set the expected city name",
+							"    var expectedCityName = \"Surakarta (Solo)\";",
+							"",
+							"    // Check if the origin city_name matches the expected value",
+							"    pm.expect(originCityName).to.equal(expectedCityName);",
+							"});",
+							"pm.test(\"Check Destination City Name is Yogyakarta\", function () {",
+							"    // Get the response JSON",
+							"    var jsonResponse = pm.response.json();",
+							"",
+							"    // Extract the city_name from destination_details",
+							"    var destinationCityName = jsonResponse.rajaongkir.destination_details.city_name;",
+							"",
+							"    // Set the expected city name",
+							"    var expectedCityName = \"Yogyakarta\";",
+							"",
+							"    // Check if the destination city_name matches the expected value",
+							"    pm.expect(destinationCityName).to.equal(expectedCityName);",
+							"});",
+							"pm.test(\"Check Courier is JNE\", function () {",
+							"    // Get the response JSON",
+							"    var jsonResponse = pm.response.json();",
+							"",
+							"    // Extract the courier code from the response",
+							"    var courierCode = jsonResponse.rajaongkir.results[0].code;",
+							"",
+							"    // Set the expected courier code",
+							"    var expectedCourierCode = \"jne\";",
+							"",
+							"    // Check if the courier code matches the expected value",
+							"    pm.expect(courierCode.toLowerCase()).to.equal(expectedCourierCode);",
+							"});",
+							"pm.test(\"Check Available Services\", function () {",
+							"    // Get the response JSON",
+							"    var jsonResponse = pm.response.json();",
+							"",
+							"    // Extract the available services from the response",
+							"    var availableServices = jsonResponse.rajaongkir.results[0].costs.map(cost => cost.service);",
+							"",
+							"    // Set the expected available services",
+							"    var expectedServices = [\"OKE\", \"REG\", \"YES\"];",
+							"",
+							"    // Check if the available services match the expected values",
+							"    pm.expect(availableServices).to.include.members(expectedServices);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "key",
+						"value": "307d3f7f7fc2939a82e8558de62e84a7",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "origin",
+							"value": "445",
+							"type": "text"
+						},
+						{
+							"key": "destination",
+							"value": "501",
+							"type": "text"
+						},
+						{
+							"key": "weight",
+							"value": "1000",
+							"type": "text"
+						},
+						{
+							"key": "courier",
+							"value": "jne",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{urlongkir}}/cost",
+					"host": [
+						"{{urlongkir}}"
+					],
+					"path": [
+						"cost"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
